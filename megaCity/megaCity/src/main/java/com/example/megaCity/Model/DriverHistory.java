@@ -5,7 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
+import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "driver_history")
@@ -19,15 +20,24 @@ public class DriverHistory {
     private String nic;
     private String firstName;
     private String bookingId;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private Date startDate;  // Changed to Date
+    private Date endDate;    // Changed to Date
     private double rideAmount;
 
-    // Default constructor
     public DriverHistory() {
     }
 
-    // Getters and Setters
+    public DriverHistory(String driverId, String nic, String firstName, String bookingId,
+                         Date startDate, Date endDate, double rideAmount) {
+        this.driverId = driverId;
+        this.nic = nic;
+        this.firstName = firstName;
+        this.bookingId = bookingId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.rideAmount = rideAmount;
+    }
+
     public Long getId() {
         return id;
     }
@@ -68,19 +78,19 @@ public class DriverHistory {
         this.bookingId = bookingId;
     }
 
-    public LocalDate getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
@@ -90,5 +100,39 @@ public class DriverHistory {
 
     public void setRideAmount(double rideAmount) {
         this.rideAmount = rideAmount;
+    }
+
+    @Override
+    public String toString() {
+        return "DriverHistory{" +
+                "id=" + id +
+                ", driverId='" + driverId + '\'' +
+                ", nic='" + nic + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", bookingId='" + bookingId + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", rideAmount=" + rideAmount +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DriverHistory that = (DriverHistory) o;
+        return Double.compare(that.rideAmount, rideAmount) == 0 &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(driverId, that.driverId) &&
+                Objects.equals(nic, that.nic) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(bookingId, that.bookingId) &&
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(endDate, that.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, driverId, nic, firstName, bookingId, startDate, endDate, rideAmount);
     }
 }

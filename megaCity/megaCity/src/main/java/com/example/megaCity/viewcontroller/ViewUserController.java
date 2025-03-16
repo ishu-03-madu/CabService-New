@@ -20,18 +20,6 @@ public class ViewUserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/dashboard")
-    public String userDashboard(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-
-        if (user == null) {
-            return "redirect:/login";
-        }
-
-        model.addAttribute("user", user);
-        return "dashboard";
-    }
-
     @GetMapping("/login")
     public String loginPage() {
         return "login";
@@ -50,9 +38,9 @@ public class ViewUserController {
             session.setAttribute("user", user);
 
             if ("ADMIN".equals(user.getUserType())) {
-                return "redirect:/admin/dashboard";
+                return "redirect:/dashboard"; // Admin goes to dashboard
             } else {
-                return "redirect:/home"; // Redirect to home page after login
+                return "redirect:/home"; // Regular users go to home
             }
         } else {
             redirectAttributes.addFlashAttribute("error", "Invalid email or password");
@@ -78,7 +66,7 @@ public class ViewUserController {
         }
 
         // Prevent registration with admin email
-        if ("admin".equals(user.getEmail())) {
+        if ("admin@gmail.com".equals(user.getEmail())) {
             redirectAttributes.addFlashAttribute("error", "This email is reserved");
             return "redirect:/signup";
         }

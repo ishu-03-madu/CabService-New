@@ -19,12 +19,12 @@ public class UserService {
 
     @PostConstruct
     public void init() {
-        // Check if admin exists
-        if (userRepository.findByEmail("admin").isEmpty()) {
-            // Create admin user
-            User admin = new User("Admin", "User", "admin@gmail.com", "admin123", "ADMIN");
-            userRepository.save(admin);
-        }
+        // Check if admin exists - use the correct email "admin@gmail.com"
+//        if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
+//            // Create admin user
+//            User admin = new User("Admin", "User", "ad@gmail.com", "admin123", "ADMIN");
+//            userRepository.save(admin);
+//        }
     }
 
     public List<User> getAllUsers() {
@@ -45,7 +45,7 @@ public class UserService {
 
     public User saveUser(User user) {
         // Check if this is the admin user
-        if ("admin".equals(user.getEmail())) {
+        if ("admin@gmail.com".equals(user.getEmail())) {
             // Prevent admin modification
             return user;
         }
@@ -55,15 +55,15 @@ public class UserService {
     public void deleteUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         // Prevent deletion of admin
-        if (user.isPresent() && !"admin".equals(user.get().getEmail())) {
+        if (user.isPresent() && !"admin@gmail.com".equals(user.get().getEmail())) {
             userRepository.deleteById(id);
         }
     }
 
     public User authenticateUser(String email, String password) {
         // Special case for admin
-        if ("admin".equals(email) && "admin123".equals(password)) {
-            return userRepository.findByEmail("admin").orElse(null);
+        if ("admin@gmail.com".equals(email) && "admin123".equals(password)) {
+            return userRepository.findByEmail("admin@gmail.com").orElse(null);
         }
 
         // Regular authentication

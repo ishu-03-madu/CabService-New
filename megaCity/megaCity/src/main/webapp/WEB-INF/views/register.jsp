@@ -10,161 +10,210 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            justify-content: center;
+            background: url('uploads/loginba.jpg') no-repeat center center fixed;
+            background-size: cover;
         }
 
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-            margin: 20px;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
+        .registration-container {
+            display: flex;
+            width: 80%;
+            max-width: 1200px;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px;
         }
 
         .logo img {
-            max-width: 150px;
+            width: 100px;
+            height: 100px;
+            margin-left: 40%;
         }
 
-        h2 {
+        .form-section {
+            flex: 1;
+            padding: 30px;
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            background-color: #bd9e9e;
+            border: 1px solid #ddd;
+            border-radius: 50%;
             text-align: center;
+            line-height: 30px;
+            font-size: 28px;
             color: #333;
-            margin-bottom: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
         }
 
-        .form-group {
-            margin-bottom: 15px;
+        .close-button:hover {
+            background-color: #b8b1b1;
+        }
+
+        .form-section h2 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            list-style: none;
+            padding: 0;
+        }
+
+        .progress-bar li {
+            text-align: center;
+            width: 25%;
+        }
+
+        .progress-bar li span {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            background: #ddd;
+            border-radius: 50%;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar li.active span {
+            background: #ff5b5b;
+            color: black;
+        }
+
+        .progress-bar li.active {
+            color: #661d1d;
+        }
+
+        form {
+            display: none;
+        }
+
+        form.active {
+            display: block;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
+            margin-bottom: 10px;
         }
 
-        .form-control {
+        input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .btn {
-            padding: 12px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background-color: #45a049;
-        }
-
-        .alert {
             padding: 10px;
             margin-bottom: 15px;
-            border-radius: 4px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
 
-        .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        button {
+            background: #fd7878;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
         }
 
-        .login-link {
-            text-align: center;
-            margin-top: 15px;
+        button:hover {
+            background: #ff5b5b;
         }
 
-        .login-link a {
-            color: #4CAF50;
-            text-decoration: none;
+        .forlogin {
+            text-align: right;
+            font-size: 14px;
+        }
+        .forlogin a {
+            color: #007bff;
         }
 
-        .login-link a:hover {
-            text-decoration: underline;
+        .image-section {
+            flex: 1;
+            background: url('https://i.etsystatic.com/40485572/r/il/66fbdb/4608947253/il_fullxfull.4608947253_a73t.jpg') no-repeat center center;
+            background-size: cover;
+            border-top-left-radius: 50%;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/uploads/logo.png" alt="Logo">
+    <div class="registration-container">
+        <div class="form-section">
+            <div class="close-button" onclick="window.location.href='${pageContext.request.contextPath}/home'">×</div>
+            <div class="logo">
+                <img src="${pageContext.request.contextPath}/images/logo.png" alt="Logo">
+            </div>
+
+            <h2>Create Your Account</h2>
+
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger">${error}</div>
+            </c:if>
+
+            <form:form action="${pageContext.request.contextPath}/register" method="post" modelAttribute="user" class="active">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <form:input path="firstName" required="true" placeholder="Enter your first name" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <form:input path="lastName" required="true" placeholder="Enter your last name" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label>NIC or Passport</label>
+                    <form:input path="nicOrPassport" required="true" placeholder="Enter your NIC or passport number" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <form:input path="phoneNumber" required="true" placeholder="Enter phone number" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Secondary Phone Number (Optional)</label>
+                    <form:input path="secondaryPhoneNumber" placeholder="Enter secondary phone number" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <form:input path="address" required="true" placeholder="Enter your address" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <form:input path="email" type="email" required="true" placeholder="Enter your email" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <form:password path="password" required="true" placeholder="Enter your password" class="form-control"/>
+                </div>
+
+                <button type="submit" class="btn">Register</button>
+            </form:form>
+
+            <div class="forlogin">
+                Already have an account? <a href="${pageContext.request.contextPath}/login">Sign In</a>
+            </div>
         </div>
-
-        <h2>Create Your Account</h2>
-
-        <c:if test="${not empty error}">
-            <div class="alert alert-danger">${error}</div>
-        </c:if>
-
-        <form:form action="${pageContext.request.contextPath}/register" method="post" modelAttribute="user">
-            <div class="form-group">
-                <label>First Name</label>
-                <form:input path="firstName" required="true" placeholder="Enter your first name" class="form-control"/>
-            </div>
-
-            <div class="form-group">
-                <label>Last Name</label>
-                <form:input path="lastName" required="true" placeholder="Enter your last name" class="form-control"/>
-            </div>
-
-            <div class="form-group">
-                <label>NIC or Passport</label>
-                <form:input path="nicOrPassport" required="true" placeholder="Enter your NIC or passport number" class="form-control"/>
-            </div>
-
-            <div class="form-group">
-                <label>Phone Number</label>
-                <form:input path="phoneNumber" required="true" placeholder="Enter phone number" class="form-control"/>
-            </div>
-
-            <div class="form-group">
-                <label>Secondary Phone Number (Optional)</label>
-                <form:input path="secondaryPhoneNumber" placeholder="Enter secondary phone number" class="form-control"/>
-            </div>
-
-            <div class="form-group">
-                <label>Address</label>
-                <form:input path="address" required="true" placeholder="Enter your address" class="form-control"/>
-            </div>
-
-            <div class="form-group">
-                <label>Email</label>
-                <form:input path="email" type="email" required="true" placeholder="Enter your email" class="form-control"/>
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <form:password path="password" required="true" placeholder="Enter your password" class="form-control"/>
-            </div>
-
-            <button type="submit" class="btn">Register</button>
-        </form:form>
-
-        <div class="login-link">
-            Already have an account? <a href="${pageContext.request.contextPath}/login">Sign In</a>
-        </div>
+        <div class="image-section"></div>
     </div>
 </body>
 </html>

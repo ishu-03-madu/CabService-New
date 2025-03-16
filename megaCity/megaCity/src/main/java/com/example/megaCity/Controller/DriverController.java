@@ -20,15 +20,21 @@ public class DriverController {
     public String driverDetailsPage(Model model) {
         List<Driver> drivers = driverService.getAllDrivers();
         model.addAttribute("drivers", drivers);
-        model.addAttribute("driver", new Driver()); // For the form
+        model.addAttribute("driver", new Driver());
         return "DriverDetails";
     }
 
     // Add new driver
     @PostMapping("/drivers/add")
-    public String addDriver(@ModelAttribute Driver driver) {
-        driverService.saveDriver(driver);
-        return "redirect:/DriverDetails";
+    public String addDriver(@ModelAttribute Driver driver, Model model) {
+        try {
+            driverService.saveDriver(driver);
+            return "redirect:/DriverDetails";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error adding driver: " + e.getMessage());
+            model.addAttribute("drivers", driverService.getAllDrivers());
+            return "DriverDetails";
+        }
     }
 
     // Delete driver
@@ -38,7 +44,7 @@ public class DriverController {
         return "redirect:/DriverDetails";
     }
 
-    // Get driver for update
+    // Get driver for edit
     @GetMapping("/drivers/edit/{driverId}")
     @ResponseBody
     public Driver getDriverForEdit(@PathVariable String driverId) {
@@ -47,8 +53,14 @@ public class DriverController {
 
     // Update driver
     @PostMapping("/drivers/update")
-    public String updateDriver(@ModelAttribute Driver driver) {
-        driverService.saveDriver(driver);
-        return "redirect:/DriverDetails";
+    public String updateDriver(@ModelAttribute Driver driver, Model model) {
+        try {
+            driverService.saveDriver(driver);
+            return "redirect:/DriverDetails";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error updating driver: " + e.getMessage());
+            model.addAttribute("drivers", driverService.getAllDrivers());
+            return "DriverDetails";
+        }
     }
 }

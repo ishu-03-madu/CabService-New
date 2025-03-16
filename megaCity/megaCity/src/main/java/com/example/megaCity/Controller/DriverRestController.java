@@ -1,6 +1,5 @@
 package com.example.megaCity.Controller;
 
-
 import com.example.megaCity.Model.Driver;
 import com.example.megaCity.Model.DriverHistory;
 import com.example.megaCity.Service.DriverHistoryService;
@@ -27,8 +26,9 @@ public class DriverRestController {
 
     // Get all drivers
     @GetMapping
-    public List<Driver> getAllDrivers() {
-        return driverService.getAllDrivers();
+    public ResponseEntity<List<Driver>> getAllDrivers() {
+        List<Driver> drivers = driverService.getAllDrivers();
+        return ResponseEntity.ok(drivers);
     }
 
     // Get driver by ID
@@ -42,8 +42,12 @@ public class DriverRestController {
     // Add new driver
     @PostMapping
     public ResponseEntity<Driver> addDriver(@RequestBody Driver driver) {
-        Driver savedDriver = driverService.saveDriver(driver);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedDriver);
+        try {
+            Driver savedDriver = driverService.saveDriver(driver);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedDriver);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     // Update driver
@@ -53,7 +57,12 @@ public class DriverRestController {
             return ResponseEntity.notFound().build();
         }
         driver.setDriverId(driverId);
-        return ResponseEntity.ok(driverService.saveDriver(driver));
+        try {
+            Driver updatedDriver = driverService.saveDriver(driver);
+            return ResponseEntity.ok(updatedDriver);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     // Delete driver
@@ -71,43 +80,59 @@ public class DriverRestController {
     public ResponseEntity<Driver> updateDriverAvailability(
             @PathVariable String driverId,
             @RequestBody Map<String, Object> payload) {
-        boolean available = (boolean) payload.get("available");
-        String bookingNo = (String) payload.get("bookingNo");
+        try {
+            boolean available = (boolean) payload.get("available");
+            String bookingNo = (String) payload.get("bookingNo");
 
-        Driver updatedDriver = driverService.updateDriverAvailability(driverId, available, bookingNo);
-        if (updatedDriver == null) {
-            return ResponseEntity.notFound().build();
+            Driver updatedDriver = driverService.updateDriverAvailability(driverId, available, bookingNo);
+            if (updatedDriver == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(updatedDriver);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return ResponseEntity.ok(updatedDriver);
     }
 
     // Get available drivers
     @GetMapping("/available")
-    public List<Driver> getAvailableDrivers() {
-        return driverService.getAvailableDrivers();
+    public ResponseEntity<List<Driver>> getAvailableDrivers() {
+        List<Driver> availableDrivers = driverService.getAvailableDrivers();
+        return ResponseEntity.ok(availableDrivers);
     }
 
     // Get driver history
     @GetMapping("/{driverId}/history")
-    public List<DriverHistory> getDriverHistory(@PathVariable String driverId) {
-        return driverHistoryService.getDriverHistoryByDriverId(driverId);
+    public ResponseEntity<List<DriverHistory>> getDriverHistory(@PathVariable String driverId) {
+        List<DriverHistory> history = driverHistoryService.getDriverHistoryByDriverId(driverId);
+        return ResponseEntity.ok(history);
     }
 
     // Add driver history record
     @PostMapping("/history")
     public ResponseEntity<DriverHistory> addDriverHistory(@RequestBody DriverHistory driverHistory) {
-        DriverHistory savedHistory = driverHistoryService.saveDriverHistory(driverHistory);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedHistory);
+        try {
+            DriverHistory savedHistory = driverHistoryService.saveDriverHistory(driverHistory);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedHistory);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
-    // Calculate salary
+    // Calculate salary (adjusted to return plain text)
     @GetMapping("/{driverId}/salary")
-    public ResponseEntity<Map<String, Double>> calculateSalary(
+    public ResponseEntity<String> calculateSalary(
             @PathVariable String driverId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-
-        Double totalSalary = driverHistoryService.calculateTotalSalary(driverId, startDate, endDate);
-        return ResponseEntity.ok(Map.of("totalSalary", totalSalary));
+        try {
+            Double totalSalary = driverHistoryService.calculateTotalSalary(driverId, startDate, endDate);
+            if (totalSalary == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("0.00");
+            }
+            return ResponseEntity.ok(String.format("%.2f", totalSalary));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error calculating salary");
+        }
     }
 }

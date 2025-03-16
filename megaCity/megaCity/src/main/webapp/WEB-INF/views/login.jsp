@@ -191,11 +191,11 @@
 <body>
 
   <div class="login-container">
-    <div class="close-button" onclick="window.location.href='${pageContext.request.contextPath}/Home'">&times;</div>
+    <div class="close-button" onclick="window.location.href='${pageContext.request.contextPath}/home'">&times;</div>
     <div class="image-section"></div>
     <div class="form-section">
       <div class="logo">
-        <img src="${pageContext.request.contextPath}/uploads/logo.png" alt="Logo">
+        <img src="${pageContext.request.contextPath}/images/logo.png" alt="Logo">
       </div>
       <h2>Welcome to Mega City Cab</h2>
 
@@ -224,7 +224,7 @@
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJQ9p0kwWYIU-O7dnjXUwIBnxItQb08fMMBQ&s" alt="Google Logo">
             Sign in with Google
           </a>
-          <p>Don't have an account? <a href="${pageContext.request.contextPath}/register">Create Account</a></p>
+          <p>Don't have an account? <a href="${pageContext.request.contextPath}/signup">Create Account</a></p>
         </div>
       </form>
     </div>

@@ -19,7 +19,7 @@ public class StructuredPageController {
     @Autowired
     private CarRepository carRepository;
 
-    @GetMapping("/carStructured")
+    @GetMapping("/Structured")
     public String structuredPage(@RequestParam String carNo, Model model) {
         Optional<Car> optionalCar = carRepository.findById(carNo);
 
@@ -43,5 +43,31 @@ public class StructuredPageController {
         }
 
         return "structured";  // This maps to /WEB-INF/views/structured.jsp
+    }
+
+    @GetMapping("/carStructured")
+    public String carStructuredPage(@RequestParam String carNo, Model model) {
+        Optional<Car> optionalCar = carRepository.findById(carNo);
+
+        if (!optionalCar.isPresent()) {
+            return "redirect:/cars";  // Redirect to car listing if car not found
+        }
+
+        Car car = optionalCar.get();
+        model.addAttribute("car", car);
+
+        // Process included features (convert comma-separated string to list)
+        if (car.getIncludedFeatures() != null && !car.getIncludedFeatures().isEmpty()) {
+            List<String> includedFeaturesList = Arrays.asList(car.getIncludedFeatures().split(","));
+            model.addAttribute("includedFeaturesList", includedFeaturesList);
+        }
+
+        // Process excluded features (convert comma-separated string to list)
+        if (car.getExcludedFeatures() != null && !car.getExcludedFeatures().isEmpty()) {
+            List<String> excludedFeaturesList = Arrays.asList(car.getExcludedFeatures().split(","));
+            model.addAttribute("excludedFeaturesList", excludedFeaturesList);
+        }
+
+        return "structuredpage";  // This should match your existing JSP file name
     }
 }
